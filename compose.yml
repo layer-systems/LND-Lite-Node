@@ -11,11 +11,17 @@ services:
       - --bitcoin.node=neutrino
     volumes:
       - ./lnd-data:/root/.lnd
-  rtl:
-    image: shahanafarooqui/rtl:0.13.1
-    container_name: rtl
-    restart: always
+  # rtl:
+  #   image: shahanafarooqui/rtl:0.13.1
+  #   container_name: rtl
+  #   restart: always
+  #   volumes:
+  #     - ./lnd-data:/root/.lnd/
   thunderhub:
     image: apotdevin/thunderhub:v0.13.16
     container_name: thunderhub
     restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./lnd-data:/root/.lnd/
