@@ -9,6 +9,8 @@ services:
       - --bitcoin.active
       - --bitcoin.mainnet
       - --bitcoin.node=neutrino
+    volumes:
+      - ./lnd-data:/root/.lnd
   rtl:
     image: shahanafarooqui/rtl:0.13.1
     container_name: rtl
