@@ -2,27 +2,54 @@ version: '3'
 services:
   # docker run lightninglabs/lnd:v0.15.1-beta --bitcoin.active --bitcoin.mainnet --bitcoin.node=neutrino
   lnd:
-    image: lightninglabs/lnd:v0.15.1-beta
+    image: lightninglabs/lnd:v0.15.5-beta
     container_name: lnd
     restart: always
+    ports:
+      - 8080:8080
+      - 9735:9735
+      - 10009:10009
     command:
       - --bitcoin.active
       - --bitcoin.mainnet
       - --bitcoin.node=neutrino
+      - --feeurl=https://nodes.lightning.computer/fees/v1/btc-fee-estimates.json
+      - --restlisten=0.0.0.0:8080
+      - --rpclisten=0.0.0.0:10009
     volumes:
       - ./lnd-data:/root/.lnd
-  # rtl:
-  #   image: shahanafarooqui/rtl:0.13.1
-  #   container_name: rtl
-  #   restart: always
-  #   volumes:
-  #     - ./lnd-data:/root/.lnd/
-  thunderhub:
-    image: apotdevin/thunderhub:v0.13.16
-    container_name: thunderhub
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+  rtl:
+    image: shahanafarooqui/rtl:0.13.3
+    container_name: rtl
     restart: always
+    depends_on:
+      - lnd
     ports:
       - 3000:3000
     volumes:
-      - ./thunderhub-data:/root/
+      - type: bind
+        source: ./RTL-Config.json
+        target: /RTL/RTL-Config.json
       - ./lnd-data:/root/.lnd/
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+  # thunderhub:
+  #   image: apotdevin/thunderhub:v0.13.18
+  #   container_name: thunderhub
+  #   restart: always
+  #   depends_on:
+  #     - lnd
+  #   ports:
+  #     - 3001:3000
+  #   volumes:
+  #     - type: bind
+  #       source: ./thunderhub-data/.env.local
+  #       target: /app/.env.local
+  #     - type: bind
+  #       source: ./thunderhub-data/thunderhub_accounts.yaml
+  #       target: /app/thunderhub_accounts.yaml
+  #     - ./lnd-data:/root/.lnd
+  #   sysctls:
+  #     - net.ipv6.conf.all.disable_ipv6=1
