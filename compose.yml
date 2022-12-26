@@ -53,3 +53,38 @@ services:
   #     - ./lnd-data:/root/.lnd
   #   sysctls:
   #     - net.ipv6.conf.all.disable_ipv6=1
+  # --------------
+  lnd_testnet:
+    image: lightninglabs/lnd:v0.15.5-beta
+    container_name: lnd_testnet
+    restart: always
+    ports:
+      - 18080:18080
+      - 19735:19735
+      - 20009:20009
+    command:
+      - --bitcoin.active
+      - --bitcoin.testnet
+      - --bitcoin.node=neutrino
+      - --feeurl=https://nodes.lightning.computer/fees/v1/btc-fee-estimates.json
+      - --restlisten=0.0.0.0:18080
+      - --rpclisten=0.0.0.0:20009
+    volumes:
+      - ./lnd-data:/root/.lnd
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+  rtl_testnet:
+    image: shahanafarooqui/rtl:0.13.3
+    container_name: rtl_testnet
+    restart: always
+    depends_on:
+      - lnd_testnet
+    ports:
+      - 4000:3000
+    volumes:
+      - type: bind
+        source: ./RTL-Config_testnet.json
+        target: /RTL/RTL-Config.json
+      - ./lnd-data:/root/.lnd/
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
