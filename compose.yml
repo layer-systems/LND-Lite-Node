@@ -27,7 +27,7 @@ services:
       - 3000:3000
     volumes:
       - type: bind
-        source: ./rtl-data/RTL-Config.json
+        source: ./RTL-Config.json
         target: /RTL/RTL-Config.json
       - ./lnd-data:/root/.lnd/
     sysctls:
