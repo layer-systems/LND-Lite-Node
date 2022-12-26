@@ -15,6 +15,7 @@ services:
       - --bitcoin.node=neutrino
       - --feeurl=https://nodes.lightning.computer/fees/v1/btc-fee-estimates.json
       - --restlisten=0.0.0.0:8080
+      - --rpclisten=0.0.0.0:10009
     volumes:
       - ./lnd-data:/root/.lnd
     sysctls:
@@ -23,6 +24,8 @@ services:
     image: shahanafarooqui/rtl:0.13.3
     container_name: rtl
     restart: always
+    depends_on:
+      - lnd
     ports:
       - 3000:3000
     volumes:
@@ -33,11 +36,20 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
   # thunderhub:
-    # image: apotdevin/thunderhub:v0.13.16
-    # container_name: thunderhub
-    # restart: always
-    # ports:
-    #   - 3000:3000
-    # volumes:
-    #   - ./thunderhub-data:/root/
-    #   - ./lnd-data:/root/.lnd/
+  #   image: apotdevin/thunderhub:v0.13.18
+  #   container_name: thunderhub
+  #   restart: always
+  #   depends_on:
+  #     - lnd
+  #   ports:
+  #     - 3001:3000
+  #   volumes:
+  #     - type: bind
+  #       source: ./thunderhub-data/.env.local
+  #       target: /app/.env.local
+  #     - type: bind
+  #       source: ./thunderhub-data/thunderhub_accounts.yaml
+  #       target: /app/thunderhub_accounts.yaml
+  #     - ./lnd-data:/root/.lnd
+  #   sysctls:
+  #     - net.ipv6.conf.all.disable_ipv6=1
