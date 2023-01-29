@@ -1,3 +1,6 @@
+# Fix file permissions for scripts
+chmod +x ./*.sh
+
 # Startup Docker Containers
 docker compose up -d
 
