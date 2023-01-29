@@ -2,5 +2,3 @@ lnd-data/
 thunderhub-data/
 rtl-data/
 seed.txt
-
-!lnd-data/lnd.conf
