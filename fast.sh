@@ -11,8 +11,5 @@ sh get-docker.sh
 git clone https://github.com/layer-systems/LND-Lite-Node.git
 cd LND-Lite-Node/
 
-# Startup Docker Containers
-docker compose up -d
-
-# Create/Restore LND Wallet
-docker exec -it lnd lncli create
+# Run Setup Script
+./setup.sh
