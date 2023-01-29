@@ -21,7 +21,7 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
   rtl:
-    image: shahanafarooqui/rtl:0.13.3
+    image: shahanafarooqui/rtl:0.13.4
     container_name: rtl
     restart: always
     depends_on:
