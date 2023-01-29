@@ -1,2 +1,2 @@
-# Start Docker Compose
+# Stop Docker Compose
 docker compose down
