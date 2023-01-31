@@ -1,5 +1,5 @@
-# LND-Lite-Node
-A Lite and simple LND Node build with docker and a WebGUI (Ride-The-Lightning)
+# ApexLND
+Apex LND is a light and simple LND Node build with docker and a WebGUI (Ride-The-Lightning)
 
 ## Fast Setup (Installs Docker & then runs the setup script)
 Run `./fast-{distribution}.sh`
