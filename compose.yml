@@ -18,6 +18,9 @@ services:
       - --rpclisten=0.0.0.0:10009
     volumes:
       - ./lnd-data:/root/.lnd
+      - type: bind
+        source: ./lnd.conf
+        target: /root/.lnd/lnd.conf
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
   rtl:
@@ -32,6 +35,9 @@ services:
       - type: bind
         source: ./RTL-Config.json
         target: /RTL/RTL-Config.json
+      - type: bind
+        source: ./lnd.conf
+        target: /root/.lnd/lnd.conf
       - ./lnd-data:/root/.lnd/
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
