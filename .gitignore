@@ -1,6 +1,7 @@
 lnd-data/
 thunderhub-data/
 rtl-data/
+btc-data/
 seed.txt
 seed_testnet.txt
 lnd.conf
