@@ -12,7 +12,14 @@ services:
     command:
       - --bitcoin.active
       - --bitcoin.mainnet
-      - --bitcoin.node=neutrino
+      - --bitcoin.node=bitcoind
+      - --bitcoind.dir=/root/.bitcoin
+      - --bitcoind.rpchost=bitcoin
+      - --bitcoind.rpcuser=bitcoin
+      - --bitcoind.rpcpass=bitcoin
+      - --bitcoind.zmqpubrawblock=tcp://bitcoin:28332
+      - --bitcoind.zmqpubrawtx=tcp://bitcoin:28332
+      - --bitcoind.estimatemode=CONSERVATIVE
       - --feeurl=https://nodes.lightning.computer/fees/v1/btc-fee-estimates.json
       - --restlisten=0.0.0.0:8080
       - --rpclisten=0.0.0.0:10009
@@ -21,8 +28,20 @@ services:
       - type: bind
         source: ./lnd.conf
         target: /root/.lnd/lnd.conf
+      - ./btc-data:/root/.bitcoin:ro
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
+  bitcoin:
+    # profiles:
+    #   - fullnode
+    image: btcpayserver/bitcoin:24.0.1-1
+    container_name: bitcoin
+    restart: always
+    ports: 
+      - 8333:8333
+      - 28332:28332
+    volumes:
+      - ./btc-data:/data/
   rtl:
     image: shahanafarooqui/rtl:0.13.4
     container_name: rtl
