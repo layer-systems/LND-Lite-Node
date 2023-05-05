@@ -2,7 +2,7 @@ version: '3'
 services:
   # docker run lightninglabs/lnd:v0.15.1-beta --bitcoin.active --bitcoin.mainnet --bitcoin.node=neutrino
   lnd:
-    image: lightninglabs/lnd:v0.15.5-beta
+    image: lightninglabs/lnd:v0.16.2-beta
     container_name: lnd
     restart: always
     ports:
@@ -24,7 +24,7 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
   rtl:
-    image: shahanafarooqui/rtl:0.13.4
+    image: shahanafarooqui/rtl:0.13.6
     container_name: rtl
     restart: always
     depends_on:
