@@ -1,0 +1,80 @@
+version: '3'
+services:
+  # docker run lightninglabs/lnd:v0.15.1-beta --bitcoin.active --bitcoin.mainnet --bitcoin.node=neutrino
+  lnd:
+    image: lightninglabs/lnd:v0.15.5-beta
+    container_name: lnd
+    restart: always
+    ports:
+      - 8080:8080
+      - 9735:9735
+      - 10009:10009
+    command:
+      - --bitcoin.active
+      - --bitcoin.mainnet
+      - --bitcoin.node=bitcoind
+      - --bitcoind.dir=/root/.bitcoin
+      - --bitcoind.rpchost=bitcoin
+      - --bitcoind.rpcuser=bitcoin
+      - --bitcoind.rpcpass=bitcoin
+      - --bitcoind.zmqpubrawblock=tcp://bitcoin:28332
+      - --bitcoind.zmqpubrawtx=tcp://bitcoin:28332
+      - --bitcoind.estimatemode=CONSERVATIVE
+      - --feeurl=https://nodes.lightning.computer/fees/v1/btc-fee-estimates.json
+      - --restlisten=0.0.0.0:8080
+      - --rpclisten=0.0.0.0:10009
+    volumes:
+      - ./lnd-data:/root/.lnd
+      - type: bind
+        source: ./lnd.conf
+        target: /root/.lnd/lnd.conf
+      - ./btc-data:/root/.bitcoin:ro
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+  bitcoin:
+    # profiles:
+    #   - fullnode
+    image: btcpayserver/bitcoin:24.0.1-1
+    container_name: bitcoin
+    restart: always
+    ports: 
+      - 8333:8333
+      - 28332:28332
+    volumes:
+      - ./btc-data:/data/
+  rtl:
+    image: shahanafarooqui/rtl:0.13.4
+    container_name: rtl
+    restart: always
+    depends_on:
+      - lnd
+    ports:
+      - 80:3000
+    volumes:
+      - type: bind
+        source: ./RTL-Config.json
+        target: /RTL/RTL-Config.json
+      - type: bind
+        source: ./lnd.conf
+        target: /root/.lnd/lnd.conf
+      - ./lnd-data:/root/.lnd/
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+  # thunderhub:
+  #   image: apotdevin/thunderhub:v0.13.18
+  #   container_name: thunderhub
+  #   restart: always
+  #   depends_on:
+  #     - lnd
+  #   ports:
+  #     - 3001:3000
+  #   volumes:
+  #     - type: bind
+  #       source: ./thunderhub-data/.env.local
+  #       target: /app/.env.local
+  #     - type: bind
+  #       source: ./thunderhub-data/thunderhub_accounts.yaml
+  #       target: /app/thunderhub_accounts.yaml
+  #     - ./lnd-data:/root/.lnd
+  #   sysctls:
+  #     - net.ipv6.conf.all.disable_ipv6=1
