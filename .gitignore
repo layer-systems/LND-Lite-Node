@@ -4,3 +4,4 @@ rtl-data/
 seed.txt
 seed_testnet.txt
 lnd.conf
+RTL-Config.json
